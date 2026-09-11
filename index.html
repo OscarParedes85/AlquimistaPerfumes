@@ -45,6 +45,11 @@
 
         @media (min-width: 1024px) {
             .tarjeta-perfume { flex: 1 1 calc(25% - 1.125rem); max-width: calc(25% - 1.125rem); }
+            /*
+            .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:hover {
+                transform: translateY(-4px);
+                border-color: rgba(245, 158, 11, 0.5);
+            }*/
         }
         @media (min-width: 768px) and (max-width: 1023px) {
             .tarjeta-perfume { flex: 1 1 calc(33.333% - 1rem); max-width: calc(33.333% - 1rem); }
@@ -55,6 +60,13 @@
         @media (max-width: 639px) {
             .tarjeta-perfume { flex: 1 1 100%; max-width: 100%; }
         }
+
+        /* Efecto hover general para escritorio y toque/activo para móvil *
+        .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:hover,
+        .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:active {
+            transform: translateY(-4px);
+            border-color: rgba(245, 158, 11, 0.5);
+        }*/
         
         .tarjeta-perfume.expandida {
             flex: 1 1 100% !important;
@@ -121,8 +133,8 @@
         .marco-svg rect {
             width: 100%;
             height: 100%;
-            /*rx: 1rem; /* Radio de las esquinas */
-            /*ry: 1rem;*/
+            rx: 1rem; /* Radio de las esquinas */
+            ry: 1rem;
             fill: none;
             stroke: #f59e0b; /* Color ámbar de tu paleta */
             stroke-width: 2px;
@@ -317,7 +329,7 @@
                 card.innerHTML = `
                     <!-- MARCO PROGRESIVO SVG (Efecto de trazo fluido) -->
                     <svg class="marco-svg">
-                        <rect rx="16" ry="16"></rect>
+                        <rect></rect>
                     </svg>
 
                     <div class="tarjeta-shine"></div>
@@ -511,17 +523,8 @@
         }
 
         function cerrarTarjeta(id) {
-            const tarjeta = document.getElementById(`tarjeta-${id}`);
-            const grid = document.getElementById('grid-perfumes');
-            
-            // Suavizamos el cierre removiendo clases con sincronización limpia
-            tarjeta.classList.remove('expandida');
-            
-            // Pequeño retraso para que la transición de altura termine antes de limpiar el modo clic y evitar el salto de scroll
-            setTimeout(() => {
-                grid.classList.remove('modo-clic');
-                tarjeta.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-            }, 300);
+            document.getElementById(`tarjeta-${id}`).classList.remove('expandida');
+            document.getElementById('grid-perfumes').classList.remove('modo-clic');
         }
 
         document.getElementById('buscador').addEventListener('input', (e) => {
