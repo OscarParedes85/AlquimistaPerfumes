@@ -76,7 +76,9 @@
         }
         @media (max-width: 767px) {
             .tarjeta-perfume.expandida { height: 750px !important; }
-            .tarjeta-perfume.expandida .marco-svg {
+            .tarjeta-perfume:active .marco-svg,
+    .tarjeta-perfume:focus .marco-svg,
+    .tarjeta-perfume.expandida .marco-svg {
         stroke-dashoffset: 0;
         opacity: 1;
     }
@@ -132,10 +134,10 @@
             fill: none;
     stroke: #f59e0b; /* Color ámbar */
     stroke-width: 2;
-    stroke-dasharray: 1500;
-    stroke-dashoffset: 1500;
-    opacity: 0; /* Oculto completamente por defecto */
-    transition: stroke-dashoffset 0.6s ease-in-out, opacity 0.3s ease;
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    opacity: 0;
+    transition: stroke-dashoffset 0.5s ease-in-out, opacity 0.2s ease-in-out;
         }
 
         .marco-svg rect {
@@ -169,7 +171,7 @@
         <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <span class="text-xs uppercase tracking-widest text-amber-500 font-semibold">Catálogo Personal</span>
-                <h1 class="text-3xl font-bold tracking-tight text-white">GABINETE DE NOTAS2</h1>
+                <h1 class="text-3xl font-bold tracking-tight text-white">GABINETE DE NOTAS3</h1>
             </div>
             
             <div class="flex items-center gap-3">
