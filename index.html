@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alquimista - Colección de Perfumes</title>
+    <title>Gabinete de Notas - Colección de Perfumes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
@@ -13,21 +13,38 @@
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
+             /* Necesario para habilitar el espacio 3D */
+             perspective: 1000px; 
         }
 
         .tarjeta-perfume {
             height: 320px;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+             /* Transición suave cuando el mouse sale de la tarjeta */
+             transition: transform 0.15s ease-out, box-shadow 0.3s ease;
             overflow: hidden;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
+
+        /* Capa de brillo dinámico (Efecto Tilt Codrops) */
+        .tarjeta-shine {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.15) 0%, transparent 80%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+/*
+        .tarjeta-perfume:hover .tarjeta-shine {
+            opacity: 1;
+        }*/
 
         @media (min-width: 1024px) {
             .tarjeta-perfume { flex: 1 1 calc(25% - 1.125rem); max-width: calc(25% - 1.125rem); }
-            .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:hover {
-                transform: translateY(-4px);
-                border-color: rgba(245, 158, 11, 0.5);
-            }
         }
         @media (min-width: 768px) and (max-width: 1023px) {
             .tarjeta-perfume { flex: 1 1 calc(33.333% - 1rem); max-width: calc(33.333% - 1rem); }
@@ -39,6 +56,14 @@
             .tarjeta-perfume { flex: 1 1 100%; max-width: 100%; }
         }
 
+        /* En PC: Se activa al pasar el mouse */
+@media (min-width: 768px) {
+    .tarjeta-perfume:hover .marco-svg {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+        
         .tarjeta-perfume.expandida {
             flex: 1 1 100% !important;
             max-width: 100% !important;
@@ -47,9 +72,15 @@
             border-width: 2px;
             cursor: default;
             box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.2);
+            transform: none !important; /* Desactiva el tilt cuando está expandida */
         }
         @media (max-width: 767px) {
             .tarjeta-perfume.expandida { height: 750px !important; }
+            .tarjeta-perfume.expandida {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.15), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.5); /* Un borde ámbar suave y estático, sin animaciones de trazo */
+    }
         }
 
         .vista-normal, .vista-detalle {
@@ -86,6 +117,51 @@
         #drawer-deseos.abierto {
             transform: translateX(0);
         }
+
+        /*MARCO*/
+        /* Contenedor del marco SVG progresivo */
+        .marco-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 1rem; /* Coincide con rounded-2xl o rounded-xl */
+            overflow: hidden;
+            z-index: 20;
+
+            fill: none;
+    stroke: #f59e0b; /* Color ámbar */
+    stroke-width: 2;
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    opacity: 0;
+    transition: stroke-dashoffset 0.6s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .marco-svg rect {
+            width: 100%;
+            height: 100%;
+            /*rx: 1rem; /* Radio de las esquinas */
+            /*ry: 1rem;*/
+            fill: none;
+            stroke: #f59e0b; /* Color ámbar de tu paleta */
+            stroke-width: 2px;
+            stroke-dasharray: 1200; /* Longitud estimada del perímetro */
+            stroke-dashoffset: 1200; /* Inicialmente oculto por completo */
+            transition: stroke-dashoffset 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Activar efectos solo cuando NO está expandida */
+        .tarjeta-perfume:not(.expandida):hover .tarjeta-shine,
+        .tarjeta-perfume:not(.expandida):active .tarjeta-shine {
+            opacity: 1;
+        }
+
+        .tarjeta-perfume:not(.expandida):hover .marco-svg rect,
+        .tarjeta-perfume:not(.expandida):active .marco-svg rect {
+            stroke-dashoffset: 0;
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen selection:bg-amber-500 selection:text-zinc-950">
@@ -93,8 +169,8 @@
     <header id="header-principal" class="border-b border-zinc-800/80 bg-zinc-900/50 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
-                <span class="text-xs uppercase tracking-widest text-amber-500 font-semibold">Catálogo Personal</span>
-                <h1 class="text-3xl font-bold tracking-tight text-white">ALQUIMISTA</h1>
+              <h1 class="text-3xl font-bold tracking-tight text-white">GABINETE DE NOTAS</h1>
+              <span class="text-xs uppercase tracking-widest text-amber-500 font-semibold">Catálogo Personal</span>
             </div>
             
             <div class="flex items-center gap-3">
@@ -156,7 +232,7 @@
         let catalogoData = [];
         let deseosData = [];
         let esPropietario = localStorage.getItem('alquimista_admin') === 'true';
-        const PIN_SECRETO = "1234"; 
+        const PIN_SECRETO = "1985"; 
 
         async function inicializarCatalogo() {
             try {
@@ -260,6 +336,13 @@
                 ` : '';
 
                 card.innerHTML = `
+                    <!-- MARCO PROGRESIVO SVG (Efecto de trazo fluido) -->
+                    <svg class="marco-svg">
+                        <rect x="0" y="0" width="100%" height="100%" rx="16" ry="16"></rect>
+                    </svg>
+
+                    <div class="tarjeta-shine"></div>
+
                     <div class="vista-normal flex flex-col h-full w-full justify-between">
                         <div class="h-40 rounded-xl bg-zinc-950 overflow-hidden border border-zinc-800/50 flex items-center justify-center relative">
                             <img src="${perfume.imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
@@ -293,18 +376,18 @@
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-zinc-300 mb-3">
                                     <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80">
-                                        <strong class="text-amber-400 block mb-0.5">Tipo:</strong>${perfume.familia}
+                                        <strong class="text-amber-400 block mb-0.5">Tipo (Estilo):</strong>${perfume.familia}
                                     </div>
                                     <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80">
-                                        <strong class="text-amber-400 block mb-0.5">Temporada:</strong>${perfume.temporada}
+                                        <strong class="text-amber-400 block mb-0.5">Uso / Temporada:</strong>${perfume.temporada}
                                     </div>
                                 </div>
 
                                 <div class="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
                                     <div class="flex gap-2 border-b border-zinc-800 pb-2 mb-2">
-                                        <button onclick="cambiarPestaña(${perfume.id}, 'salida', event)" id="btn-${perfume.id}-salida" class="text-xs font-bold px-3 py-1 rounded-lg bg-amber-500 text-zinc-950 transition-all cursor-pointer">Salida</button>
-                                        <button onclick="cambiarPestaña(${perfume.id}, 'corazon', event)" id="btn-${perfume.id}-corazon" class="text-xs font-bold px-3 py-1 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-all cursor-pointer">Corazón</button>
-                                        <button onclick="cambiarPestaña(${perfume.id}, 'fondo', event)" id="btn-${perfume.id}-fondo" class="text-xs font-bold px-3 py-1 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-all cursor-pointer">Fondo</button>
+                                        <button onclick="cambiarPestaña('${perfume.id}', 'salida', event)" id="btn-${perfume.id}-salida" class="text-xs font-bold px-3 py-1 rounded-lg bg-amber-500 text-zinc-950 transition-all cursor-pointer">Salida</button>
+                                        <button onclick="cambiarPestaña('${perfume.id}', 'corazon', event)" id="btn-${perfume.id}-corazon" class="text-xs font-bold px-3 py-1 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-all cursor-pointer">Corazón</button>
+                                        <button onclick="cambiarPestaña('${perfume.id}', 'fondo', event)" id="btn-${perfume.id}-fondo" class="text-xs font-bold px-3 py-1 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-all cursor-pointer">Fondo</button>
                                     </div>
                                     <div id="contenido-${perfume.id}" class="text-xs text-zinc-300 min-h-[36px] flex items-center">
                                         ${perfume.notasSalida}
@@ -316,6 +399,37 @@
                         </div>
                     </div>
                 `;
+
+                // --- LÓGICA DEL EFECTO TILT (3D HOVER) ---
+                card.addEventListener('mousemove', (e) => {
+                    if (card.classList.contains('expandida')) return;
+                    
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -8;
+                    const rotateY = ((x - centerX) / centerX) * 8;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                    
+                    const shine = card.querySelector('.tarjeta-shine');
+                    shine.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(245, 158, 11, 0.25) 0%, transparent 70%)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    if (card.classList.contains('expandida')) return;
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+                });
+
+                // --- NUEVO: LÓGICA TÁCTIL PARA MÓVILES (< 767px) ---
+                card.addEventListener('touchstart', () => {
+                    document.querySelectorAll('.tarjeta-perfume').forEach(t => t.classList.remove('tocado'));
+                    card.classList.add('tocado');
+                }, { passive: true });
 
                 card.onclick = () => abrirTarjeta(perfume.id);
                 grid.appendChild(card);
@@ -339,7 +453,7 @@
                 item.className = "bg-zinc-950/60 border border-zinc-800/80 rounded-xl p-3 flex gap-3 items-center justify-between";
                 
                 const botonAccion = esPropietario ? `
-                    <button onclick="adquirirPerfume(${perfume.id})" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer shadow-md flex-shrink-0">
+                    <button onclick="adquirirPerfume('${perfume.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer shadow-md flex-shrink-0">
                         ¡Lo adquirí!
                     </button>
                 ` : `<span class="text-[10px] text-zinc-500 italic">🔒 Solo lectura</span>`;
@@ -373,7 +487,6 @@
                 const [perfumeAdquirido] = deseosData.splice(index, 1);
                 catalogoData.push(perfumeAdquirido);
 
-                // Guardar automáticamente en la nube
                 await guardarEnNube();
 
                 renderizarGrid(catalogoData);
@@ -384,9 +497,11 @@
         function cambiarPestaña(id, tipo, event) {
             event.stopPropagation();
             const perfume = catalogoData.find(p => p.id === id);
-            const contenedor = document.getElementById(`contenido-${id}`);
+            if (!perfume) return;
             
+            const contenedor = document.getElementById(`contenido-${id}`);
             const cardEl = document.getElementById(`tarjeta-${id}`);
+            
             cardEl.querySelectorAll(`[id^="btn-${id}-"]`).forEach(btn => {
                 btn.className = "text-xs font-bold px-3 py-1 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-all cursor-pointer";
             });
@@ -421,8 +536,15 @@
         }
 
         function cerrarTarjeta(id) {
-            document.getElementById(`tarjeta-${id}`).classList.remove('expandida');
-            document.getElementById('grid-perfumes').classList.remove('modo-clic');
+            const tarjeta = document.getElementById(`tarjeta-${id}`);
+            const grid = document.getElementById('grid-perfumes');
+            
+            tarjeta.classList.remove('expandida');
+            
+            setTimeout(() => {
+                grid.classList.remove('modo-clic');
+                tarjeta.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            }, 300);
         }
 
         document.getElementById('buscador').addEventListener('input', (e) => {
