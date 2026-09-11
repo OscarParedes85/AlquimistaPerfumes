@@ -13,43 +13,21 @@
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
-             /* Necesario para habilitar el espacio 3D */
-             perspective: 1000px; 
         }
 
         .tarjeta-perfume {
             height: 320px;
-             /* Transición suave cuando el mouse sale de la tarjeta */
-             transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             overflow: hidden;
             position: relative;
-            -webkit-tap-highlight-color: transparent;
-            transform-style: preserve-3d;
-            will-change: transform;
         }
-
-        /* Capa de brillo dinámico (Efecto Tilt Codrops) */
-        .tarjeta-shine {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.15) 0%, transparent 80%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 10;
-        }
-/*
-        .tarjeta-perfume:hover .tarjeta-shine {
-            opacity: 1;
-        }*/
 
         @media (min-width: 1024px) {
             .tarjeta-perfume { flex: 1 1 calc(25% - 1.125rem); max-width: calc(25% - 1.125rem); }
-            /*
             .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:hover {
                 transform: translateY(-4px);
                 border-color: rgba(245, 158, 11, 0.5);
-            }*/
+            }
         }
         @media (min-width: 768px) and (max-width: 1023px) {
             .tarjeta-perfume { flex: 1 1 calc(33.333% - 1rem); max-width: calc(33.333% - 1rem); }
@@ -61,13 +39,6 @@
             .tarjeta-perfume { flex: 1 1 100%; max-width: 100%; }
         }
 
-        /* Efecto hover general para escritorio y toque/activo para móvil *
-        .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:hover,
-        .contenedor-flexible:not(.modo-clic) .tarjeta-perfume:active {
-            transform: translateY(-4px);
-            border-color: rgba(245, 158, 11, 0.5);
-        }*/
-        
         .tarjeta-perfume.expandida {
             flex: 1 1 100% !important;
             max-width: 100% !important;
@@ -76,7 +47,6 @@
             border-width: 2px;
             cursor: default;
             box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.2);
-            transform: none !important; /* Desactiva el tilt cuando está expandida */
         }
         @media (max-width: 767px) {
             .tarjeta-perfume.expandida { height: 750px !important; }
@@ -115,43 +85,6 @@
         }
         #drawer-deseos.abierto {
             transform: translateX(0);
-        }
-
-        /*MARCO*/
-        /* Contenedor del marco SVG progresivo */
-        .marco-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            border-radius: 1rem; /* Coincide con rounded-2xl o rounded-xl */
-            overflow: hidden;
-            z-index: 20;
-        }
-
-        .marco-svg rect {
-            width: 100%;
-            height: 100%;
-            rx: 1rem; /* Radio de las esquinas */
-            ry: 1rem;
-            fill: none;
-            stroke: #f59e0b; /* Color ámbar de tu paleta */
-            stroke-width: 2px;
-            stroke-dasharray: 1200; /* Longitud estimada del perímetro */
-            stroke-dashoffset: 1200; /* Inicialmente oculto por completo */
-            transition: stroke-dashoffset 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* Activar efectos solo cuando NO está expandida */
-        .tarjeta-perfume:not(.expandida):hover .tarjeta-shine,
-        .tarjeta-perfume:not(.expandida):active .tarjeta-shine {
-            opacity: 1;
-        }
-
-        .tarjeta-perfume:not(.expandida):hover .marco-svg rect,
-        .tarjeta-perfume:not(.expandida):active .marco-svg rect {
-            stroke-dashoffset: 0;
         }
     </style>
 </head>
@@ -327,13 +260,6 @@
                 ` : '';
 
                 card.innerHTML = `
-                    <!-- MARCO PROGRESIVO SVG (Efecto de trazo fluido) -->
-                    <svg class="marco-svg">
-                        <rect></rect>
-                    </svg>
-
-                    <div class="tarjeta-shine"></div>
-
                     <div class="vista-normal flex flex-col h-full w-full justify-between">
                         <div class="h-40 rounded-xl bg-zinc-950 overflow-hidden border border-zinc-800/50 flex items-center justify-center relative">
                             <img src="${perfume.imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
@@ -390,34 +316,6 @@
                         </div>
                     </div>
                 `;
-
-                // --- LÓGICA DEL EFECTO TILT (3D HOVER) ---
-                card.addEventListener('mousemove', (e) => {
-                    if (card.classList.contains('expandida')) return;
-                    
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; // Posición X del mouse dentro de la tarjeta
-                    const y = e.clientY - rect.top;  // Posición Y del mouse dentro de la tarjeta
-
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-
-                    // Calcular la rotación (máximo 8 grados de inclinación para mantener elegancia)
-                    const rotateX = ((y - centerY) / centerY) * -8;
-                    const rotateY = ((x - centerX) / centerX) * 8;
-
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-                    
-                    // Mover dinámicamente el brillo según el cursor
-                    const shine = card.querySelector('.tarjeta-shine');
-                    shine.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(245, 158, 11, 0.25) 0%, transparent 70%)`;
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    if (card.classList.contains('expandida')) return;
-                    // Regresar suavemente a la posición plana
-                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-                });
 
                 card.onclick = () => abrirTarjeta(perfume.id);
                 grid.appendChild(card);
