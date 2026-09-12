@@ -376,12 +376,20 @@
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-zinc-300 mb-3">
-                                    <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80">
-                                        <strong class="text-amber-400 block mb-0.5">Tipo (Estilo):</strong>${perfume.familia}
-                                    </div>
-                                    <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80">
-                                        <strong class="text-amber-400 block mb-0.5">Uso / Temporada:</strong>${perfume.temporada}
-                                    </div>
+                                  <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80 flex flex-col justify-between">
+                                    <div>
+                                      <strong class="text-amber-400 block mb-0.5">Tipo (Estilo):</strong>${perfume.familia}
+                                  </div>
+                                  <!-- NUEVA ETIQUETA DE TIPO COMÚN -->
+                                  <div class="mt-2">
+                                      <span class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-amber-500/30">
+                                          ${perfume.tipoComun || 'General'}
+                                      </span>
+                                  </div>
+                                </div>
+                                <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80">
+                                    <strong class="text-amber-400 block mb-0.5">Uso / Temporada:</strong>${perfume.temporada}
+                                </div>
                                 </div>
 
                                 <div class="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
@@ -551,13 +559,14 @@
         document.getElementById('buscador').addEventListener('input', (e) => {
             const filtro = e.target.value.toLowerCase().trim();
             const filtrados = catalogoData.filter(p => 
-                p.marca.toLowerCase().includes(filtro) || 
-                p.nombre.toLowerCase().includes(filtro) ||
-                p.familia.toLowerCase().includes(filtro) ||
-                p.temporada.toLowerCase().includes(filtro) ||
-                p.notasSalida.toLowerCase().includes(filtro) ||
-                p.notasCorazon.toLowerCase().includes(filtro) ||
-                p.notasFondo.toLowerCase().includes(filtro)
+                  p.marca.toLowerCase().includes(filtro) || 
+                  p.nombre.toLowerCase().includes(filtro) ||
+                  p.familia.toLowerCase().includes(filtro) ||
+                  (p.tipoComun && p.tipoComun.toLowerCase().includes(filtro)) || // <--- NUEVO: Incluye el tipo común en el filtro
+                  p.temporada.toLowerCase().includes(filtro) ||
+                  p.notasSalida.toLowerCase().includes(filtro) ||
+                  p.notasCorazon.toLowerCase().includes(filtro) ||
+                  p.notasFondo.toLowerCase().includes(filtro)
             );
             renderizarGrid(filtrados);
         });
