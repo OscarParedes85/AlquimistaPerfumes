@@ -174,13 +174,23 @@
               <span class="text-xs uppercase tracking-widest text-amber-500 font-semibold">Catálogo Personal</span>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <!-- ESTATUS Y BOTÓN DE MODO PROPIETARIO (NUEVO) -->
+                <div class="flex items-center gap-2 bg-zinc-950/60 border border-zinc-800 px-4 py-2 rounded-full">
+                    <span id="auth-status" class="text-xs text-zinc-400">Modo Público (Solo lectura) 🔒</span>
+                    <button id="btn-auth-accion" onclick="verificarPropietario()" class="text-xs font-bold text-amber-400 hover:text-amber-300 transition-all cursor-pointer ml-1 underline">
+                        ¿Eres el propietario?
+                    </button>
+                </div>
+
+                <!-- BOTÓN DE DESEOS -->
                 <button onclick="toggleDeseos()" class="bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700/50 px-4 py-2.5 rounded-full flex items-center gap-2.5 shadow-lg transition-all cursor-pointer">
                     <span class="text-amber-400 text-base">♥</span>
                     <span class="text-sm font-medium text-zinc-300">Deseos:</span>
                     <span id="contador-deseos" class="bg-amber-500 text-zinc-950 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                 </button>
 
+                <!-- CONTADOR TOTAL -->
                 <div class="bg-zinc-800/80 border border-zinc-700/50 px-5 py-2.5 rounded-full flex items-center gap-3 shadow-lg">
                     <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
                     <span class="text-sm font-medium text-zinc-300">Total:</span>
@@ -277,6 +287,18 @@
             } catch (error) {
                 console.error("Error al guardar en la nube:", error);
                 alert("Hubo un error al actualizar la nube.");
+            }
+        }
+
+        // --- FUNCIÓN DE ELIMINAR PERFUME ---
+        async function eliminarPerfumeDeCatalogo(id) {
+            if (!esPropietario) return;
+            
+            if (confirm("¿Estás seguro de eliminar este perfume del catálogo porque se ha terminado?")) {
+                catalogoData = catalogoData.filter(p => p.id !== id);
+                await guardarEnNube();
+                renderizarGrid(catalogoData);
+                renderizarDeseos();
             }
         }
 
