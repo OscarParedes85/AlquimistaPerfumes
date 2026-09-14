@@ -163,6 +163,27 @@
         .tarjeta-perfume:not(.expandida):active .marco-svg rect {
             stroke-dashoffset: 0;
         }
+
+        /* LISTADO DE OPCIONES */
+        .menu-opciones-flotante {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 4.5rem;
+    width: 240px;
+    background-color: #09090b;
+    border: 1px solid #27272a;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    padding: 0.5rem;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.menu-opciones-flotante.hidden {
+    display: none;
+}
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen selection:bg-amber-500 selection:text-zinc-950">
@@ -409,12 +430,12 @@
                 // --- BOTÓN DE ELIMINAR CONDICIONAL PARA EL PROPIETARIO ---
                 const botonEliminar = esPropietario ? `
                     <div class="relative">
-                        <!-- Menú corregido: w-64 para dar espacio de sobra, right-0 alineado a la derecha, y sin saltos de línea -->
-                        <div id="menu-opciones-${perfume.id}" class="hidden absolute right-0 bottom-full mb-2 w-64 bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl p-2 z-50 flex flex-col gap-1.5">
-                            <button onclick="event.stopPropagation(); moverADeseosDesdeCatalogo('${perfume.id}')" class="text-left text-xs text-zinc-300 hover:text-amber-400 hover:bg-zinc-900 px-3 py-2 rounded-lg transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap">
+                        <!-- Menú controlado por la clase CSS dedicada -->
+                        <div id="menu-opciones-${perfume.id}" class="menu-opciones-flotante hidden">
+                            <button onclick="event.stopPropagation(); moverADeseosDesdeCatalogo('${perfume.id}')" class="w-text-left text-xs text-zinc-300 hover:text-amber-400 hover:bg-zinc-900 px-3 py-2 rounded-lg transition-all flex items-center gap-2 cursor-pointer text-left">
                                 🤍 Mover a Deseos
                             </button>
-                            <button onclick="event.stopPropagation(); confirmarEliminacionDefinitiva('${perfume.id}')" class="text-left text-xs text-red-400 hover:bg-red-500/20 px-3 py-2 rounded-lg transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap">
+                            <button onclick="event.stopPropagation(); confirmarEliminacionDefinitiva('${perfume.id}')" class="text-left text-xs text-red-400 hover:bg-red-500/20 px-3 py-2 rounded-lg transition-all flex items-center gap-2 cursor-pointer">
                                 🗑️ Eliminar Definitivamente
                             </button>
                         </div>
