@@ -303,23 +303,24 @@
         }
 
         function verificarPropietario() {
-            if (esPropietario) {
-                esPropietario = false;
-                localStorage.setItem('alquimista_admin', 'false');
-                alert("Has salido del modo propietario.");
-            } else {
-                const pin = prompt("Ingresa tu PIN de seguridad:");
-                if (pin === PIN_SECRETO) {
-                    esPropietario = true;
-                    localStorage.setItem('alquimista_admin', 'true');
-                    alert("¡Acceso concedido! Modo propietario activado.");
-                } else if (pin !== null) {
-                    alert("PIN incorrecto.");
-                }
-            }
-            actualizarInterfazAuth();
-            renderizarDeseos();
+    if (esPropietario) {
+        esPropietario = false;
+        localStorage.setItem('alquimista_admin', 'false');
+        alert("Has salido del modo propietario.");
+    } else {
+        const pin = prompt("Ingresa tu PIN de seguridad:");
+        if (pin === PIN_SECRETO) {
+            esPropietario = true;
+            localStorage.setItem('alquimista_admin', 'true');
+            alert("¡Acceso concedido! Modo propietario activado.");
+        } else if (pin !== null) {
+            alert("PIN incorrecto.");
         }
+    }
+    actualizarInterfazAuth();
+    renderizarDeseos();
+    renderizarGrid(catalogoData); // <--- ESTO ES LO QUE FALTABA: Refresca el grid completo para mostrar u ocultar los botones
+}
 
         function actualizarInterfazAuth() {
             const statusEl = document.getElementById('auth-status');
