@@ -359,6 +359,13 @@
                     </div>
                 ` : '';
 
+                // --- BOTÓN DE ELIMINAR CONDICIONAL PARA EL PROPIETARIO ---
+                const botonEliminar = esPropietario ? `
+                    <button onclick="event.stopPropagation(); eliminarPerfumeDeCatalogo('${perfume.id}')" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-zinc-950 border border-red-500/30 text-xs font-bold px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-md">
+                        🗑️ Eliminar / Terminado
+                    </button>
+                ` : '';
+
                 card.innerHTML = `
                     <!-- MARCO PROGRESIVO SVG (Efecto de trazo fluido) -->
                     <svg class="marco-svg">
