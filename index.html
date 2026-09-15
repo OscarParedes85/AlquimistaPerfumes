@@ -607,6 +607,12 @@
             const index = deseosData.findIndex(p => p.id === id);
             if (index !== -1) {
                 const [perfumeAdquirido] = deseosData.splice(index, 1);
+
+                // --- NIVEL ML ---
+                perfumeAdquirido.pocosMl = false;  // Desactiva la barra de pocos ml
+                perfumeAdquirido.nivelMl = 100;    // Restablece el nivel al 100% (frasco nuevo)
+                // -------------------------------------
+
                 catalogoData.push(perfumeAdquirido);
 
                 await guardarEnNube();
