@@ -244,11 +244,6 @@
             </button>
         </div>
 
-        <div id="seccion-auth" class="py-3 border-b border-zinc-800 flex justify-between items-center text-xs">
-            <span id="auth-status" class="text-zinc-400">Modo Público (Solo lectura)</span>
-            <button onclick="verificarPropietario()" id="btn-auth-accion" class="text-amber-400 hover:underline font-semibold cursor-pointer">¿Eres el propietario?</button>
-        </div>
-
         <div id="lista-deseos-container" class="flex-1 overflow-y-auto py-4 space-y-4">
             <!-- Se llena dinámicamente -->
         </div>
@@ -574,6 +569,7 @@
                 const item = document.createElement('div');
                 item.className = "bg-zinc-950/60 border border-zinc-800/80 rounded-xl p-3 flex gap-3 items-center justify-between";
                 
+                // --- CAMBIO AQUÍ: Usa directamente la variable global 'esPropietario' ---
                 const botonAccion = esPropietario ? `
                     <button onclick="adquirirPerfume('${perfume.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer shadow-md flex-shrink-0">
                         ¡Lo adquirí!
