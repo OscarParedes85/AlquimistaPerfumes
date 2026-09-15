@@ -490,9 +490,27 @@
                                       </span>
                                   </div>
                                 </div>
-                                <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80">
-                                    <strong class="text-amber-400 block mb-0.5">Uso / Temporada:</strong>${perfume.temporada}
-                                </div>
+                                <div class="bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-800/80 flex flex-col justify-between">
+    <span class="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block mb-1">Uso / Temporada:</span>
+    <div>
+        <!-- Línea 1: Estaciones (Calculadas dinámicamente o usando el dato) -->
+        <span class="text-xs font-bold text-white block">
+            ${(() => {
+                const partes = perfume.temporada ? perfume.temporada.split('/').map(p => p.trim()) : ['Todo el año'];
+                const estaciones = partes.filter(p => !/día|noche|ambos/i.test(p));
+                return estaciones.length > 0 ? estaciones.join(' / ') : perfume.temporada;
+            })()}
+        </span>
+        <!-- Línea 2: Momento del día -->
+        <span class="text-[11px] text-amber-400 font-medium block mt-0.5">
+            ${(() => {
+                const partes = perfume.temporada ? perfume.temporada.split('/').map(p => p.trim()) : ['Día / Noche'];
+                const momentos = partes.filter(p => /día|noche|ambos/i.test(p));
+                return momentos.length > 0 ? momentos.join(' / ') : 'Día / Noche';
+            })()}
+        </span>
+    </div>
+</div>
                                 </div>
 
                                 <div class="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
